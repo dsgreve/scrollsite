@@ -408,6 +408,40 @@ body {
     top: 850%;
   }
 
+  /* reserve for scrolling up */
+  .slide-pos-reverse {
+    z-index: 100;
+    position: absolute;
+    top: 70%;
+    left: 75%;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    /* visibility: hidden; */
+  }
+
+  #slide02-pos-reverse {
+    top: 170%;
+  }
+  #slide03-pos-reverse {
+    top: 270%;
+  }
+  #slide04-pos-reverse {
+    top: 370%;
+  }
+  #slide05-pos-reverse {
+    top: 470%;
+  }
+  #slide06-pos-reverse {
+    top: 570%;
+  }
+  #slide07-pos-reverse {
+    top: 670%;
+  }
+  #slide08-pos-reverse {
+    top: 770%;
+  }
+
   /* =Slide Layout */
   .slide {
     height: auto;
