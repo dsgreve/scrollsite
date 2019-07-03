@@ -7,20 +7,26 @@ $(document).ready(function () {
 		getTriggersDown = $('.slide-pos'),
 		triggersDown = [],
 		getTriggersUp = $('.slide-pos-reverse'),
-		triggersUp = [];
+		triggersUp = [],
+		$slideIn = $('.slide.active'),
+		$logo = $('.logo'),
+		$main = $('#main'),
+		$body = ('body'),
+		$slide = ('.slide'),
+		$nav = ('nav');
 
 	// triggers on way down
 	$.each(getTriggersDown, function (key, value) {
 		var id = '#' + value.id;
 		triggersDown.push(id);
-		console.log(triggersDown[key]);
+		// console.log(triggersDown[key]);
 	});
 
 	// triggers on way up
 	$.each(getTriggersUp, function (key, value) {
 		var id = '#' + value.id;
 		triggersUp.push(id);
-		console.log(triggersUp[key]);
+		// console.log(triggersUp[key]);
 	});
 	//init ScrollMagic Controller
 	controller = new ScrollMagic.Controller();
@@ -60,7 +66,13 @@ $(document).ready(function () {
 			triggerHook: 0.6
 		})
 			.on('enter', function (e) {
-				console.log('Crossfade to Next' + triggerDown);
+				// console.log('Crossfade to Next' + triggerDown);
+				var $slideOut = $('.slide.active'),
+					slideIndex = triggerDown.substring(6, 8),
+					$slideIn = $('#slide' + slideIndex),
+					direction = e.scrollDirection;
+				console.log(e.scrollDirection);
+				crossFade();
 			})
 			.addIndicators({
 				name: "triggerDown",
@@ -78,17 +90,32 @@ $(document).ready(function () {
 			triggerHook: 0.49
 		})
 			.on('leave', function (e) {
-				console.log('Crossfade to Previous' + triggerUp);
+
+				//console.log('Crossfade to Previous' + triggerUp);
 			})
-			.addIndicators({
-				name: "triggerUp",
-				indent: 120,
-				colorStart: 'red',
-				colorTrigger: 'red'
-			})
+			// .addIndicators({
+			// 	name: "triggerUp",
+			// 	indent: 120,
+			// 	colorStart: 'red',
+			// 	colorTrigger: 'red'
+			// })
 			.addTo(controller);
 	});
 
+	function init() {
+		AnimationTimeline($slideIn);
+	}
+	init();
+	//Cross Fade
+	function crossFade($slideOut, $slideIn, direction) {
 
+	}
+
+	//animate slide IN on pageload
+	function animationIn($slideIn) {
+		var $slideInNumber = $slideIn.find('.number'),
+			$slideInTitle = $slideIn.find('.fade-txt'),
+			$primaryBcg = $slideIn.find('.fade-txt');
+	}
 
 });

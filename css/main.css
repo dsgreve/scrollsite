@@ -380,7 +380,7 @@ body {
     width: 10px;
     height: 10px;
     background-color: yellow;
-    /* visibility: hidden; */
+    visibility: hidden;
   }
 
   #slide02-pos {
