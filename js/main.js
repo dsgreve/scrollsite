@@ -74,12 +74,12 @@ $(document).ready(function () {
 				console.log(e.scrollDirection);
 				crossFade();
 			})
-			.addIndicators({
-				name: "triggerDown",
-				indent: 900,
-				colorStart: 'green',
-				colorTrigger: 'green'
-			})
+			// .addIndicators({
+			// 	name: "triggerDown",
+			// 	indent: 900,
+			// 	colorStart: 'green',
+			// 	colorTrigger: 'green'
+			// })
 			.addTo(controller);
 	});
 
@@ -103,7 +103,12 @@ $(document).ready(function () {
 	});
 
 	function init() {
-		AnimationTimeline($slideIn);
+		setTimeout(function(){
+			//prevent flicker on load
+			TweenMax.set($body, {autoAlpha: 1});
+			//animate first slide in
+			animationIn($slideIn);
+		}, 500);
 	}
 	init();
 	//Cross Fade
@@ -115,7 +120,24 @@ $(document).ready(function () {
 	function animationIn($slideIn) {
 		var $slideInNumber = $slideIn.find('.number'),
 			$slideInTitle = $slideIn.find('.fade-txt'),
-			$primaryBcg = $slideIn.find('.fade-txt');
+			$primaryBcg = $slideIn.find('.primary .bcg'),
+			$whiteBcg = $slideIn.find('.bcg-white'),
+			transitionInTl = new TimelineMax();
+
+			transitionInTl
+			.set([$slide, $slideInNumber, $nav, $logo], {autoAlpha:0})
+			.set($slideIn, {autoAlpha: 1})
+			.set($whiteBcg, {scaleX: 1})
+			.set($primaryBcg, {scaleX: 0})
+
+			.to($whiteBcg, 0.4, {scaleX: 0.63, ease: Power2.easeIn})
+			.to($primaryBcg, 0.4, {scaleX: 1, ease: Power2.easeOut, clearProps: 'all'})
+			.add('fadeInLogo')
+			.to($whiteBcg, 0.6, {scaleX: 0, ease: Power4.easeIn}, 'fadeInLogo+=0.3')
+			.to([$logo, $slideInNumber], 0.2, {autoAlpha: 1, ease:Linear.easeNone}, 'fadeInLogo-=0.2')
+			.staggerFrom($slideInTitle, 0.3, {autoAlpha: 0, x: '-=60', ease:Power1.easeOut}, 0.1, 'fadeInLogo+=0.9')
+			.fromTo($nav, 0.3, {y: -15, autoAlpha: 0}, {autoAlpha: 1, y:0, ease: Power1.easeOut},'fadeInLogo+=1.5')
+			;
 	}
 
 });
