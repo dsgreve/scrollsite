@@ -22,6 +22,17 @@ $(document).ready(function () {
 		// console.log(triggersDown[key]);
 	});
 
+	// triggersDown = [
+	// 	"#slide02-pos",
+	// 	"#slide03-pos",
+	// 	"#slide04-pos",
+	// 	"#slide05-pos",
+	// 	"#slide06-pos",
+	// 	"#slide07-pos",
+	// 	"#slide08-pos",
+	// 	"#slide09-pos"
+	// ]
+
 	// triggers on way up
 	$.each(getTriggersUp, function (key, value) {
 		var id = '#' + value.id;
@@ -40,6 +51,7 @@ $(document).ready(function () {
 		.setPin("#main .pin-wrapper", { pushFollowers: false })
 		.addTo(controller);
 
+	// Navigation timeline
 	var navTl = new TimelineMax();
 
 
@@ -72,13 +84,13 @@ $(document).ready(function () {
 					$slideIn = $('#slide' + slideIndex),
 					direction = e.scrollDirection;
 				console.log(e.scrollDirection);
-				crossFade();
+				crossFade($slideOut, $slideIn, direction, slideIndex);
 			})
 			// .addIndicators({
-			// 	name: "triggerDown",
-			// 	indent: 900,
-			// 	colorStart: 'green',
-			// 	colorTrigger: 'green'
+			// 	name: 'triggerDown',
+			// 	indent: 520,
+			// 	colorStart: 'yellow',
+			// 	colorTrigger: 'yellow'
 			// })
 			.addTo(controller);
 	});
@@ -103,41 +115,89 @@ $(document).ready(function () {
 	});
 
 	function init() {
-		setTimeout(function(){
+		setTimeout(function () {
 			//prevent flicker on load
-			TweenMax.set($body, {autoAlpha: 1});
+			TweenMax.set($body, { autoAlpha: 1 });
 			//animate first slide in
 			animationIn($slideIn);
 		}, 500);
 	}
 	init();
 	//Cross Fade
-	function crossFade($slideOut, $slideIn, direction) {
+	function crossFade($slideOut, $slideIn, direction, slideIndex) {
+		var slideOutID = $slideOut.attr('id').substring(5, 7),
+			slideInID = $slideIn.attr('id').substring(5, 7)
 
+		// slide out
+		$slideOutBcg = $slideOut.find('.bcg-color'),
+			$slideOutTitle = $slideOut.find('.title .fade-txt'),
+			$slideOutNumber = $slideOut.find('.number'),
+
+			// slide In
+			$slideInBcg = $slideIn.find('.bcg-color'),
+			$slideInTitle = $slideIn.find('.title .fade-txt'),
+			$slideInNumber = $slideIn.find('.number'),
+			$slideInBcgWhite = $slideIn.find('.primary .bcg')
+			;
+
+
+		//update nav
+		updateNav(slideOutID, slideInID);
+
+		// remove class active from all slides
+		TweenMax.set($slide, { className: '-=active' })
+
+		// add class active to the current slide
+		TweenMax.set($('#slide' + slideIndex), { className: '+=active' });
+
+		// Cross fade timeline
+		var crossFadeTl = new TimelineMax();
+
+		crossFadeTl
+			.set($slideIn, { autoAlpha: 1 })
+			.set([$slideInTitle, $slideInNumber, $slideInBcgWhite], { autoAlpha: 0 })
+			.to([$slideOutTitle, $slideOutNumber], 0.3, { autoAlpha: 0, ease: Linear.easeNone })
+			.set($main, { className: 'slide' + slideInID + '-active' })
+			.set($slideInNumber, { text: '0' })
+			.to($slideInNumber, 1.2, { autoAlpha: 1, ease: Linear.easeNone })
+			;
+	}
+
+
+
+	function updateNav(slideOutID, slideInID) {
+		//remove active class from dots
+		$('.nav-items li').removeClass('active');
+
+		//add  active class to new active slide
+		TweenMax.set($('.nav-items li.nav-item' + slideInID), { className: '+=active' })
 	}
 
 	//animate slide IN on pageload
 	function animationIn($slideIn) {
+
 		var $slideInNumber = $slideIn.find('.number'),
 			$slideInTitle = $slideIn.find('.fade-txt'),
 			$primaryBcg = $slideIn.find('.primary .bcg'),
 			$whiteBcg = $slideIn.find('.bcg-white'),
 			transitionInTl = new TimelineMax();
 
-			transitionInTl
-			.set([$slide, $slideInNumber, $nav, $logo], {autoAlpha:0})
-			.set($slideIn, {autoAlpha: 1})
-			.set($whiteBcg, {scaleX: 1})
-			.set($primaryBcg, {scaleX: 0})
-
-			.to($whiteBcg, 0.4, {scaleX: 0.63, ease: Power2.easeIn})
-			.to($primaryBcg, 0.4, {scaleX: 1, ease: Power2.easeOut, clearProps: 'all'})
+		transitionInTl
+			.set([$slide, $slideInNumber, $nav, $logo], { autoAlpha: 0 })
+			.set($slideIn, { autoAlpha: 1 })
+			.set($whiteBcg, { scaleX: 1 })
+			.set($primaryBcg, { scaleX: 0 })
+			.to($whiteBcg, 0.4, { scaleX: 0.63, ease: Power2.easeIn })
+			.to($primaryBcg, 0.4, { scaleX: 1, ease: Power2.easeOut, clearProps: 'all' })
 			.add('fadeInLogo')
-			.to($whiteBcg, 0.6, {scaleX: 0, ease: Power4.easeIn}, 'fadeInLogo+=0.3')
-			.to([$logo, $slideInNumber], 0.2, {autoAlpha: 1, ease:Linear.easeNone}, 'fadeInLogo-=0.2')
-			.staggerFrom($slideInTitle, 0.3, {autoAlpha: 0, x: '-=60', ease:Power1.easeOut}, 0.1, 'fadeInLogo+=0.9')
-			.fromTo($nav, 0.3, {y: -15, autoAlpha: 0}, {autoAlpha: 1, y:0, ease: Power1.easeOut},'fadeInLogo+=1.5')
+			.to($whiteBcg, 0.6, { scaleX: 0, ease: Power4.easeIn }, 'fadeInLogo+=0.3')
+			.to([$logo, $slideInNumber], 0.2, { autoAlpha: 1, ease: Linear.easeNone }, 'fadeInLogo-=0.2')
+			.staggerFrom($slideInTitle, 0.3, { autoAlpha: 0, x: '-=60', ease: Power1.easeOut }, 0.1, 'fadeInLogo+=0.9')
+			.fromTo($nav, 0.3, { y: -15, autoAlpha: 0 }, { autoAlpha: 1, y: 0, ease: Power1.easeOut }, 'fadeInLogo+=1.5')
 			;
+
+		//speed up animation during dev
+		transitionInTl.timeScale(3);
 	}
 
 });
