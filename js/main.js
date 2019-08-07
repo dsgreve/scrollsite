@@ -73,6 +73,7 @@ $(document).ready(function () {
 
 	// Scene 3 - trigger the right animation on way DOWN
 	triggersDown.forEach(function (triggerDown, index) {
+
 		var triggerTransitionToNext = new ScrollMagic.Scene({
 			triggerElement: triggerDown,
 			triggerHook: 0.6
@@ -83,7 +84,7 @@ $(document).ready(function () {
 					slideIndex = triggerDown.substring(6, 8),
 					$slideIn = $('#slide' + slideIndex),
 					direction = e.scrollDirection;
-				console.log(e.scrollDirection);
+				//console.log(e.scrollDirection);
 				crossFade($slideOut, $slideIn, direction, slideIndex);
 			})
 			// .addIndicators({
@@ -102,6 +103,12 @@ $(document).ready(function () {
 			triggerHook: 0.49
 		})
 			.on('leave', function (e) {
+				var $slideOut = $('.slide.active'),
+					slideIndex = triggerUp.substring(6, 8),
+					$slideIn = $('#slide' + slideIndex),
+					direction = e.scrollDirection;
+				//console.log(e.scrollDirection);
+				crossFade($slideOut, $slideIn, direction, slideIndex);
 
 				//console.log('Crossfade to Previous' + triggerUp);
 			})
@@ -123,6 +130,7 @@ $(document).ready(function () {
 		}, 500);
 	}
 	init();
+
 	//Cross Fade
 	function crossFade($slideOut, $slideIn, direction, slideIndex) {
 		var slideOutID = $slideOut.attr('id').substring(5, 7),
@@ -138,6 +146,9 @@ $(document).ready(function () {
 			$slideInTitle = $slideIn.find('.title .fade-txt'),
 			$slideInNumber = $slideIn.find('.number'),
 			$slideInBcgWhite = $slideIn.find('.primary .bcg')
+
+		slideInValue = $slideInNumber.attr('data-value')
+
 			;
 
 
@@ -159,8 +170,62 @@ $(document).ready(function () {
 			.to([$slideOutTitle, $slideOutNumber], 0.3, { autoAlpha: 0, ease: Linear.easeNone })
 			.set($main, { className: 'slide' + slideInID + '-active' })
 			.set($slideInNumber, { text: '0' })
-			.to($slideInNumber, 1.2, { autoAlpha: 1, ease: Linear.easeNone })
+			.add('countingUp').to($slideInBcgWhite, 0.3, { autoAlpha: 1, ease: Linear.easeNone }, 'countingUp-=0.4')
+			.staggerFromTo($slideInTitle, 0.3, { autoAlpha: 0, x: '-=20' }, { autoAlpha: 1, x: 0, ease: Power1.easeOut }, 0.1, 'countingUp+=1.1')
 			;
+		crossFadeTl.timeScale(0.5);
+		var countUpText = new TimelineMax({ paused: true });
+
+		// fade number in
+		countUpText.to($slideInNumber, 1.2, { autoAlpha: 1, ease: Linear.easeNone, onUpdate: updateValue, onUpdateParams: ['{self}', slideInValue, $slideInNumber] });
+
+		var countUpTl = new TimelineMax();
+		countUpTl.to(countUpText, 1, { progress: 1, ease: Power3.easeOut });
+
+		crossFadeTl.add(countUpTl, 'countingUp');
+
+		// colored background tween up/down
+		if (direction == 'FORWARD') {
+			var tweenBcg = TweenMax.fromTo(
+				$slideInBcg, 0.7,
+				{ autoAlpha: 0 },
+				{
+					autoAlpha: 1,
+					ease: Linear.easeNone,
+					onComplete: hideOldSlide,
+					onCompleteParams: [$slideOut]
+				}
+			);
+			crossFadeTl.add(tweenBcg, 'countingUp-=0.3');
+		} else {
+			var tweenBcg = TweenMax.to(
+				$slideOutBcg, 0.7,
+				{
+					autoAlpha: 0,
+					ease: Linear.easeNone,
+					onComplete: hideOldSlide,
+					onCompleteParams: [$slideOut]
+				}
+			);
+			crossFadeTl.add(tweenBcg, 'countingUp-=0.3');
+		};
+
+	}
+
+	function hideOldSlide($slideOut) {
+		TweenMax.set($slideOut, { autoAlpha: 0 })
+	}
+
+	function updateValue(tl, slideInValue, $slideInNumber) {
+
+		var newValue = parseInt(tl.progress() * slideInValue);
+
+		if (slideInValue == 100) {
+			$slideInNumber.text(newValue);
+		} else {
+			$slideInNumber.text(newValue + '%');  // not good for the first and last slide
+		}
+
 	}
 
 
@@ -197,7 +262,7 @@ $(document).ready(function () {
 			;
 
 		//speed up animation during dev
-		transitionInTl.timeScale(3);
+		//transitionInTl.timeScale(3);
 	}
 
 });

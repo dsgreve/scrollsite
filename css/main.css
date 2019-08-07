@@ -127,6 +127,20 @@ body {
 .logo-iht {
   height: 69px;
 }
+/* =SVG */
+#layers {
+  position: absolute;
+  top: 40%;
+  left: 5%;
+  margin-top: 190px
+}
+
+#layers svg {
+  width: 668px;
+  max-width: none;
+}
+
+
 /* =Navigation */
 .nav-container {
   display: none;
@@ -250,6 +264,15 @@ body {
   line-height: 40px;
 }
 
+
+  /* =SVG */
+  #layers {
+    margin-top: -30px
+  }
+
+  #layers svg {
+    max-width: 90%;
+  }
 /* ==========================================================================
    Media Queries
    ========================================================================== */
@@ -273,6 +296,14 @@ body {
 }
 
 @media only screen and (min-width: 768px) {
+  /* =SVG */
+  #layers {
+    margin-top: -40px
+  }
+
+  #layers svg {
+    max-width: 550px;
+  }
 }
 
 @media only screen and (min-width: 1025px) {
@@ -280,7 +311,7 @@ body {
     opacity: 0;
   }
 
-  .no-js body, 
+  .no-js body,
   .touch body {
     opacity: 1;
   }
@@ -428,7 +459,7 @@ body {
     width: 10px;
     height: 10px;
     background-color: red;
-    /* visibility: hidden; */
+    visibility: hidden;
   }
 
   #slide02-pos-reverse {
