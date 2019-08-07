@@ -240,6 +240,14 @@ $(document).ready(function () {
 
 	//animate slide IN on pageload
 	function animationIn($slideIn) {
+		var introAnimationTl = new TimelineMax(),
+			$layer = $('.layer'),
+			$svgBase = $('#base'),
+			$svgPath = $('#base path'),
+			$awwwLogo = $('.awww-logo');
+
+		introAnimationTl
+			.from($svgPath, 1.2, { drawSVG: '0%', ease: Power2.easeInOut });
 
 		var $slideInNumber = $slideIn.find('.number'),
 			$slideInTitle = $slideIn.find('.fade-txt'),
@@ -258,6 +266,7 @@ $(document).ready(function () {
 			.to($whiteBcg, 0.6, { scaleX: 0, ease: Power4.easeIn }, 'fadeInLogo+=0.3')
 			.to([$logo, $slideInNumber], 0.2, { autoAlpha: 1, ease: Linear.easeNone }, 'fadeInLogo-=0.2')
 			.staggerFrom($slideInTitle, 0.3, { autoAlpha: 0, x: '-=60', ease: Power1.easeOut }, 0.1, 'fadeInLogo+=0.9')
+			.add(introAnimationTl, 'fadeInLogo+=1')
 			.fromTo($nav, 0.3, { y: -15, autoAlpha: 0 }, { autoAlpha: 1, y: 0, ease: Power1.easeOut }, 'fadeInLogo+=1.5')
 			;
 

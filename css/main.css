@@ -132,14 +132,13 @@ body {
   position: absolute;
   top: 40%;
   left: 5%;
-  margin-top: 190px
+  margin-top: 190px;
 }
 
 #layers svg {
   width: 668px;
   max-width: none;
 }
-
 
 /* =Navigation */
 .nav-container {
@@ -264,15 +263,14 @@ body {
   line-height: 40px;
 }
 
+/* =SVG */
+#layers {
+  margin-top: -30px;
+}
 
-  /* =SVG */
-  #layers {
-    margin-top: -30px
-  }
-
-  #layers svg {
-    max-width: 90%;
-  }
+#layers svg {
+  max-width: 90%;
+}
 /* ==========================================================================
    Media Queries
    ========================================================================== */
@@ -298,7 +296,7 @@ body {
 @media only screen and (min-width: 768px) {
   /* =SVG */
   #layers {
-    margin-top: -40px
+    margin-top: -40px;
   }
 
   #layers svg {
@@ -332,7 +330,17 @@ body {
   .logo-iht {
     height: 124px;
   }
-
+  /* =SVG */
+  #layers {
+    position: absolute;
+    top: 40%;
+    left: 5%;
+    margin-top: 190px;
+  }
+  #layers svg {
+    width: 668px;
+    max-width: none;
+  }
   /* =Navigation */
   .nav-container {
     position: absolute;
